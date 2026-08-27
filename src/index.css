@@ -1,0 +1,276 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #e6edf9;
+  --color-dim: #8fa0bf;
+  --color-faint: #5b6b8c;
+  --color-bg: #070b13;
+  --color-deep: #0a101c;
+  --color-panel: #0d1524;
+  --color-panel2: #111b2e;
+  --color-edge: #1d2b47;
+  --color-edge2: #27395c;
+  --color-up: #31d8a4;
+  --color-dn: #ff5c7a;
+  --color-warn: #ffb454;
+  --color-cy: #57c7ff;
+  --color-cysoft: #9adcff;
+  --font-display: "Chakra Petch", sans-serif;
+  --font-body: "IBM Plex Sans", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background:
+    radial-gradient(1100px 500px at 12% -6%, rgba(87, 199, 255, 0.075), transparent 60%),
+    radial-gradient(900px 480px at 96% 12%, rgba(255, 180, 84, 0.05), transparent 60%),
+    radial-gradient(1000px 600px at 60% 110%, rgba(49, 216, 164, 0.055), transparent 60%),
+    var(--color-bg);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ---------- ambient layers ---------- */
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(143, 160, 191, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(143, 160, 191, 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(1200px 800px at 50% 20%, rgba(10, 10, 10, 0.9), transparent 85%);
+  -webkit-mask-image: radial-gradient(1200px 800px at 50% 20%, rgba(10, 10, 10, 0.9), transparent 85%);
+}
+
+.bg-noise {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.scanline {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 22vh;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, rgba(87, 199, 255, 0.028), transparent);
+  animation: sweep 11s linear infinite;
+}
+
+/* ---------- panels ---------- */
+.panel {
+  background: linear-gradient(168deg, rgba(19, 28, 47, 0.82), rgba(11, 17, 30, 0.94));
+  border: 1px solid var(--color-edge);
+  box-shadow: 0 1px 0 rgba(230, 237, 249, 0.04) inset, 0 14px 34px rgba(3, 6, 12, 0.45);
+}
+
+.panel-corner {
+  position: relative;
+}
+.panel-corner::before,
+.panel-corner::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+}
+.panel-corner::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1px solid var(--color-cy);
+  border-left: 1px solid var(--color-cy);
+  opacity: 0.55;
+}
+.panel-corner::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1px solid var(--color-cy);
+  border-right: 1px solid var(--color-cy);
+  opacity: 0.55;
+}
+
+.overline-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+}
+
+.hd {
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+}
+
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- keyframes ---------- */
+@keyframes sweep {
+  from { transform: translateY(-25vh); }
+  to { transform: translateY(115vh); }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes blinkc {
+  0%, 55% { opacity: 1; }
+  56%, 100% { opacity: 0; }
+}
+@keyframes ledpulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(49, 216, 164, 0.45); }
+  60% { box-shadow: 0 0 0 6px rgba(49, 216, 164, 0); }
+}
+@keyframes ledpulse-red {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 92, 122, 0.5); }
+  60% { box-shadow: 0 0 0 7px rgba(255, 92, 122, 0); }
+}
+@keyframes dashflow {
+  to { stroke-dashoffset: -28; }
+}
+@keyframes flashup {
+  0% { color: var(--color-up); text-shadow: 0 0 14px rgba(49, 216, 164, 0.75); }
+  100% { color: var(--color-ink); text-shadow: none; }
+}
+@keyframes flashdn {
+  0% { color: var(--color-dn); text-shadow: 0 0 14px rgba(255, 92, 122, 0.75); }
+  100% { color: var(--color-ink); text-shadow: none; }
+}
+@keyframes rowin {
+  from { opacity: 0; transform: translateY(-7px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes bootline {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes loadbar {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+@keyframes softglow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.anim-rowin { animation: rowin 0.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.tick-up { animation: flashup 0.7s ease-out; }
+.tick-dn { animation: flashdn 0.7s ease-out; }
+.blink { animation: blinkc 1.1s step-end infinite; }
+.glow-soft { animation: softglow 2.6s ease-in-out infinite; }
+
+/* ---------- ticker ---------- */
+.ticker-mask {
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #0a0a0a 4%, #0a0a0a 96%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #0a0a0a 4%, #0a0a0a 96%, transparent);
+}
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 46s linear infinite;
+}
+.ticker-track:hover { animation-play-state: paused; }
+
+/* ---------- LEDs & chips ---------- */
+.led {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  flex: none;
+}
+.led-up { background: var(--color-up); animation: ledpulse 2.2s ease-out infinite; }
+.led-dn { background: var(--color-dn); animation: ledpulse-red 1.4s ease-out infinite; }
+.led-warn { background: var(--color-warn); }
+.led-idle { background: var(--color-faint); }
+.led-cy { background: var(--color-cy); }
+
+/* ---------- scroll reveal ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- controls ---------- */
+.btn-os {
+  font-family: var(--font-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid var(--color-edge2);
+  transition: border-color 0.2s, background 0.2s, color 0.2s, transform 0.12s;
+}
+.btn-os:hover { border-color: var(--color-cy); color: var(--color-cysoft); }
+.btn-os:active { transform: translateY(1px); }
+
+.field {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  background: rgba(7, 11, 19, 0.85);
+  border: 1px solid var(--color-edge);
+  color: var(--color-dim);
+}
+
+.copy-flash { border-color: var(--color-up) !important; color: var(--color-up) !important; }
+
+/* ---------- scrollbar ---------- */
+.scroll-slim::-webkit-scrollbar { width: 5px; height: 5px; }
+.scroll-slim::-webkit-scrollbar-track { background: transparent; }
+.scroll-slim::-webkit-scrollbar-thumb { background: #223457; border-radius: 4px; }
+.scroll-slim::-webkit-scrollbar-thumb:hover { background: #2e4573; }
+.scroll-slim { scrollbar-width: thin; scrollbar-color: #223457 transparent; }
+
+/* ---------- boot ---------- */
+.boot-line { animation: bootline 0.35s ease-out both; }
+.boot-bar { animation: loadbar 1.35s cubic-bezier(0.3, 0.9, 0.4, 1) both; }
+.boot-fade { opacity: 0; transition: opacity 0.5s ease; pointer-events: none; }
+
+/* ---------- svg canvas ---------- */
+.wf-edge {
+  fill: none;
+  stroke: rgba(87, 199, 255, 0.32);
+  stroke-width: 1.4;
+  stroke-dasharray: 5 7;
+  animation: dashflow 1.15s linear infinite;
+}
+.wf-node { cursor: pointer; }
+.wf-node rect.body { transition: stroke 0.2s, fill 0.2s; }
+.wf-node:hover rect.body { stroke: var(--color-cy); }
+
+.row-hover { transition: background 0.15s ease, border-color 0.15s ease; }
+.row-hover:hover { background: rgba(87, 199, 255, 0.045); }
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .ticker-track { animation: none; }
+  .scanline { display: none; }
+  .reveal { opacity: 1; transform: none; }
+}
