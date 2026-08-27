@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 import { AgentRoster } from "./components/Agents";
 import { BootOverlay, FooterTerminal, HeaderBar, Reveal, SectionHead, Ticker } from "./components/Chrome";
 import { IntegrationDeck } from "./components/Integrations";
@@ -175,10 +175,46 @@ function Desk() {
   );
 }
 
+class ErrorBoundary extends Component<{ children: React.ReactNode }, { error: Error | null }> {
+  state = { error: null as Error | null };
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
+    console.error("PIPHAWK OS render fault:", error, info.componentStack);
+  }
+  render() {
+    if (this.state.error) {
+      return (
+        <div style={{ minHeight: "100vh", background: "#070b13", color: "#e6edf9", fontFamily: "IBM Plex Mono, monospace", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+          <div style={{ maxWidth: 640, border: "1px solid #ff5c7a", padding: 24 }}>
+            <div style={{ fontSize: 10, letterSpacing: "0.22em", color: "#ff5c7a", textTransform: "uppercase", marginBottom: 8 }}>kernel fault — render exception caught</div>
+            <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, fontFamily: "Chakra Petch, sans-serif" }}>PIPHAWK OS halted by error boundary</div>
+            <pre style={{ whiteSpace: "pre-wrap", fontSize: 11, color: "#8fa0bf", border: "1px solid #1d2b47", padding: 12, background: "#0a101c" }}>
+              {String(this.state.error?.message ?? this.state.error)}
+              {"\n\n"}
+              {String(this.state.error?.stack ?? "")}
+            </pre>
+            <button
+              onClick={() => window.location.reload()}
+              style={{ marginTop: 16, border: "1px solid #31d8a4", color: "#31d8a4", background: "transparent", padding: "10px 18px", cursor: "pointer", letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "inherit", fontSize: 12 }}
+            >
+              reboot desk
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export default function App() {
   return (
-    <OSProvider>
-      <Desk />
-    </OSProvider>
+    <ErrorBoundary>
+      <OSProvider>
+        <Desk />
+      </OSProvider>
+    </ErrorBoundary>
   );
 }
